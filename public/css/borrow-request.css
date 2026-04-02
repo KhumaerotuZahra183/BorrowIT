@@ -1,0 +1,203 @@
+:root {
+    --ink: #1a1a25;
+    --muted: #6b6b77;
+    --bg: #b9b9bd;
+    --panel: #f3f2f4;
+    --white: #ffffff;
+    --accent: #5f2dbd;
+    --success: #39b76a;
+    --warning: #f2a83b;
+    --danger: #e65b5b;
+    --shadow: 0 18px 40px rgba(13, 14, 30, 0.2);
+    --radius: 16px;
+}
+* { box-sizing: border-box; }
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--bg);
+    font-family: "Libre Baskerville", "Garamond", serif;
+    color: var(--ink);
+}
+.shell {
+    max-width: 1200px;
+    margin: 26px auto;
+    background: #efeff2;
+    border-radius: 14px;
+    box-shadow: 0 22px 60px rgba(0, 0, 0, 0.2);
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    min-height: 720px;
+}
+.sidebar {
+    background: linear-gradient(180deg, #1d1039 0%, #110628 100%);
+    border-radius: 14px 0 0 14px;
+    color: #fff;
+    padding: 22px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+.brand {
+    font-size: 18px;
+    letter-spacing: 0.6px;
+    font-weight: 700;
+}
+.brand span {
+    color: #67c9ff;
+}
+.nav {
+    display: grid;
+    gap: 10px;
+}
+.nav a {
+    padding: 10px 12px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: #c8c4d6;
+    font-family: "Source Sans 3", "Helvetica Neue", sans-serif;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.nav a.active,
+.nav a:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+}
+.content {
+    padding: 24px 28px 32px;
+}
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+}
+.topbar h1 {
+    margin: 0;
+    font-size: 20px;
+}
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: "Source Sans 3", "Helvetica Neue", sans-serif;
+    font-size: 13px;
+}
+.avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ffd971, #ff7b7b);
+    display: grid;
+    place-items: center;
+    font-weight: 700;
+    color: #4a2b2b;
+}
+.logout {
+    border: none;
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-family: "Source Sans 3", "Helvetica Neue", sans-serif;
+    font-size: 12px;
+}
+.panel {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: var(--shadow);
+}
+.toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+.search {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #efedf2;
+    padding: 6px 12px;
+    border-radius: 20px;
+}
+.search input {
+    border: none;
+    background: transparent;
+    font-family: "Source Sans 3", "Helvetica Neue", sans-serif;
+    font-size: 12px;
+    outline: none;
+}
+.btn {
+    border: none;
+    background: #6f4bd6;
+    color: #fff;
+    border-radius: 18px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-family: "Source Sans 3", "Helvetica Neue", sans-serif;
+    cursor: pointer;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: "Source Sans 3", "Helvetica Neue", sans-serif;
+    font-size: 12px;
+}
+th, td {
+    text-align: left;
+    padding: 8px 6px;
+    border-bottom: 1px solid #efedf2;
+}
+th {
+    color: var(--muted);
+    font-weight: 600;
+}
+.status {
+    font-weight: 600;
+}
+.status.pending { color: var(--warning); }
+.status.approved { color: var(--success); }
+.status.rejected { color: var(--danger); }
+.actions {
+    display: flex;
+    gap: 8px;
+}
+.actions button {
+    border: none;
+    background: #efedf2;
+    border-radius: 8px;
+    padding: 4px 6px;
+    cursor: pointer;
+    font-size: 11px;
+}
+.pagination {
+    display: flex;
+    justify-content: flex-end;
+    gap: 6px;
+    margin-top: 12px;
+    font-family: "Source Sans 3", "Helvetica Neue", sans-serif;
+    font-size: 12px;
+}
+.pagination a,
+.pagination span {
+    padding: 4px 8px;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #2f2f3a;
+    background: #efedf2;
+}
+.pagination .current {
+    background: #3a3a3a;
+    color: #fff;
+}
+@media (max-width: 960px) {
+    .shell { grid-template-columns: 1fr; }
+    .sidebar { border-radius: 14px 14px 0 0; flex-direction: row; flex-wrap: wrap; }
+    .toolbar { flex-direction: column; align-items: stretch; }
+}

@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Users | BorrowIT</title>
-    <link rel="stylesheet" href="{{ asset('css/manage-users.css') }}">
+    <title>Active Borrow | BorrowIT</title>
+    <link rel="stylesheet" href="{{ asset('css/active-borrow.css') }}">
 </head>
 <body>
     <div class="shell">
@@ -12,16 +12,16 @@
             <div class="brand">Borrow<span>IT</span></div>
             <nav class="nav">
                 <a href="{{ route('dashboard') }}">Dashboard</a>
-                <a class="active" href="{{ route('users.index') }}">Manage Users</a>
+                <a href="{{ route('users.index') }}">Manage Users</a>
                 <a href="{{ route('assets.index') }}">Asset Management</a>
                 <a href="{{ route('borrow.index') }}">Borrow Request</a>
-                <a href="{{ route('borrow.active') }}">Active Borrow</a>
+                <a class="active" href="{{ route('borrow.active') }}">Active Borrow</a>
             </nav>
         </aside>
 
         <main class="content">
             <div class="topbar">
-                <h1>Manage Users</h1>
+                <h1>Active Borrow</h1>
                 <div class="profile">
                     <div class="avatar">{{ strtoupper(substr($user->name, 0, 1)) }}</div>
                     <span>{{ $user->name }}</span>
@@ -34,52 +34,59 @@
 
             <section class="panel">
                 <div class="toolbar">
-                    <form class="search" method="GET" action="{{ route('users.index') }}">
-                        <input type="text" name="search" placeholder="Search User" value="{{ $search }}">
+                    <form class="search" method="GET" action="{{ route('borrow.active') }}">
+                        <input type="text" name="search" placeholder="Search Borrow" value="{{ $search }}">
                     </form>
-                    <button class="btn" type="button">+ Add New User</button>
+                    <button class="btn" type="button">+ New Borrow</button>
                 </div>
 
                 <table>
                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Department</th>
-                            <th>Role</th>
+                            <th>Borrow ID</th>
+                            <th>User</th>
+                            <th>Asset</th>
+                            <th>Borrow Date</th>
+                            <th>Due Date</th>
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($users as $row)
+                        @forelse ($borrows as $row)
                             <tr>
-                                <td>{{ $row->name }}</td>
-                                <td>{{ $row->email }}</td>
-                                <td>{{ $row->department ?? '-' }}</td>
-                                <td>{{ $row->role ?? 'User' }}</td>
-                                <td><span class="status">{{ $row->status ?? 'Active' }}</span></td>
+                                <td>{{ $row['id'] }}</td>
+                                <td>{{ $row['user'] }}</td>
+                                <td>{{ $row['asset'] }}</td>
+                                <td>{{ $row['borrow_date'] }}</td>
+                                <td>{{ $row['due_date'] }}</td>
+                                <td>
+                                    @php
+                                        $statusClass = strtolower(str_replace(' ', '', $row['status']));
+                                    @endphp
+                                    <span class="status {{ $statusClass }}">{{ $row['status'] }}</span>
+                                </td>
                                 <td>
                                     <div class="actions">
-                                        <button type="button" title="Edit">Edit</button>
-                                        <button type="button" title="Delete">Delete</button>
+                                        <button type="button">Return</button>
+                                        <button type="button">Extend</button>
                                     </div>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6">Belum ada data user.</td>
+                                <td colspan="7">Belum ada data pinjaman.</td>
                             </tr>
                         @endforelse
                     </tbody>
                 </table>
 
                 <div class="pagination">
-                    @foreach ($users->getUrlRange(1, $users->lastPage()) as $page => $url)
-                        @if ($page == $users->currentPage())
+                    @foreach ($pages as $page)
+                        @if ($page === $currentPage)
                             <span class="current">{{ $page }}</span>
                         @else
-                            <a href="{{ $url }}">{{ $page }}</a>
+                            <a href="{{ route('borrow.active', ['page' => $page, 'search' => $search]) }}">{{ $page }}</a>
                         @endif
                     @endforeach
                 </div>

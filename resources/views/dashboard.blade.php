@@ -14,8 +14,8 @@
                 <a class="active" href="{{ route('dashboard') }}">Dashboard</a>
                 <a href="{{ route('users.index') }}">Manage Users</a>
                 <a href="{{ route('assets.index') }}">Asset Management</a>
-                <a href="#">Borrow Request</a>
-                <a href="#">Active Borrow</a>
+                <a href="{{ route('borrow.index') }}">Borrow Request</a>
+                <a href="{{ route('borrow.active') }}">Active Borrow</a>
             </nav>
         </aside>
 

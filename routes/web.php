@@ -19,3 +19,5 @@ Route::post('/change-password', [AuthController::class, 'changePassword'])->name
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('/users', [AdminController::class, 'users'])->name('users.index');
 Route::get('/assets', [AdminController::class, 'assets'])->name('assets.index');
+Route::get('/borrow-requests', [AdminController::class, 'borrowRequests'])->name('borrow.index');
+Route::get('/active-borrows', [AdminController::class, 'activeBorrows'])->name('borrow.active');

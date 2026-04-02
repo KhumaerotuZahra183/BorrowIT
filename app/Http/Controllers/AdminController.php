@@ -74,4 +74,108 @@ class AdminController extends Controller
             'search' => $search,
         ]);
     }
+
+    public function borrowRequests(Request $request)
+    {
+        [$authUser, $redirect] = $this->requireAuth($request);
+        if ($redirect) {
+            return $redirect;
+        }
+
+        $search = $request->query('search');
+        $requests = [
+            [
+                'id' => 'BR-001',
+                'user' => 'Zahra',
+                'asset' => 'Mouse',
+                'borrow_date' => '01-01-2026',
+                'duration' => '2 Days',
+                'status' => 'Pending',
+            ],
+            [
+                'id' => 'BR-002',
+                'user' => 'Zahra',
+                'asset' => 'Projector',
+                'borrow_date' => '02-01-2026',
+                'duration' => '1 Day',
+                'status' => 'Approved',
+            ],
+            [
+                'id' => 'BR-003',
+                'user' => 'Zahra',
+                'asset' => 'Remote',
+                'borrow_date' => '02-01-2026',
+                'duration' => '3 Days',
+                'status' => 'Rejected',
+            ],
+        ];
+
+        if ($search) {
+            $requests = array_values(array_filter($requests, function ($item) use ($search) {
+                return str_contains(strtolower($item['id']), strtolower($search))
+                    || str_contains(strtolower($item['user']), strtolower($search))
+                    || str_contains(strtolower($item['asset']), strtolower($search));
+            }));
+        }
+
+        return view('borrow-requests.index', [
+            'user' => $authUser,
+            'requests' => $requests,
+            'search' => $search,
+            'pages' => [1, 2, 3],
+            'currentPage' => (int) ($request->query('page', 1)),
+        ]);
+    }
+
+    public function activeBorrows(Request $request)
+    {
+        [$authUser, $redirect] = $this->requireAuth($request);
+        if ($redirect) {
+            return $redirect;
+        }
+
+        $search = $request->query('search');
+        $borrows = [
+            [
+                'id' => 'BR-010',
+                'user' => 'Zahra',
+                'asset' => 'Mouse',
+                'borrow_date' => '01-01-2026',
+                'due_date' => '04-01-2026',
+                'status' => 'On Loan',
+            ],
+            [
+                'id' => 'BR-011',
+                'user' => 'Zahra',
+                'asset' => 'Remote',
+                'borrow_date' => '01-01-2026',
+                'due_date' => '04-01-2026',
+                'status' => 'Overdue',
+            ],
+            [
+                'id' => 'BR-012',
+                'user' => 'Zahra',
+                'asset' => 'Projector',
+                'borrow_date' => '01-01-2026',
+                'due_date' => '04-01-2026',
+                'status' => 'Returned',
+            ],
+        ];
+
+        if ($search) {
+            $borrows = array_values(array_filter($borrows, function ($item) use ($search) {
+                return str_contains(strtolower($item['id']), strtolower($search))
+                    || str_contains(strtolower($item['user']), strtolower($search))
+                    || str_contains(strtolower($item['asset']), strtolower($search));
+            }));
+        }
+
+        return view('active-borrows.index', [
+            'user' => $authUser,
+            'borrows' => $borrows,
+            'search' => $search,
+            'pages' => [1, 2, 3],
+            'currentPage' => (int) ($request->query('page', 1)),
+        ]);
+    }
 }
