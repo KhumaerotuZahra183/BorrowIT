@@ -20,18 +20,19 @@ body {
     color: var(--ink);
 }
 .shell {
-    max-width: 1200px;
-    margin: 26px auto;
+    max-width: none;
+    width: 100%;
+    margin: 0;
     background: #efeff2;
-    border-radius: 14px;
-    box-shadow: 0 22px 60px rgba(0, 0, 0, 0.2);
+    border-radius: 0;
+    box-shadow: none;
     display: grid;
     grid-template-columns: 220px 1fr;
-    min-height: 720px;
+    min-height: 100vh;
 }
 .sidebar {
     background: linear-gradient(180deg, #1d1039 0%, #110628 100%);
-    border-radius: 14px 0 0 14px;
+    border-radius: 0;
     color: #fff;
     padding: 22px 18px;
     display: flex;
@@ -118,6 +119,27 @@ body {
     gap: 12px;
     margin-bottom: 12px;
 }
+.chips {
+    display: flex;
+    gap: 10px;
+    font-family: "Source Sans 3", "Helvetica Neue", sans-serif;
+    font-size: 12px;
+}
+.chip {
+    background: #efedf2;
+    border-radius: 12px;
+    padding: 6px 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+.chip span {
+    background: #3a3a3a;
+    color: #fff;
+    border-radius: 8px;
+    padding: 2px 6px;
+    font-size: 11px;
+}
 .search {
     display: flex;
     align-items: center;
@@ -163,17 +185,35 @@ th {
 }
 .status.pending { color: var(--warning); }
 .status.approved { color: var(--success); }
+.status.onloan { color: #2f6fd6; }
 .status.rejected { color: var(--danger); }
-.actions {
+.status-wrap {
     display: flex;
-    gap: 8px;
+    align-items: center;
+    gap: 10px;
 }
-.actions button {
-    border: none;
-    background: #efedf2;
-    border-radius: 8px;
-    padding: 4px 6px;
-    cursor: pointer;
+.icons {
+    display: flex;
+    gap: 6px;
+}
+.icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #fff;
+}
+.icon.approve { background: #27b76d; }
+.icon.reject { background: #e65b5b; }
+.pill {
+    background: #2f6fd6;
+    color: #fff;
+    border-radius: 10px;
+    padding: 2px 8px;
     font-size: 11px;
 }
 .pagination {
@@ -198,6 +238,6 @@ th {
 }
 @media (max-width: 960px) {
     .shell { grid-template-columns: 1fr; }
-    .sidebar { border-radius: 14px 14px 0 0; flex-direction: row; flex-wrap: wrap; }
+    .sidebar { border-radius: 0; flex-direction: row; flex-wrap: wrap; }
     .toolbar { flex-direction: column; align-items: stretch; }
 }

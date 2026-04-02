@@ -34,10 +34,14 @@
 
             <section class="panel">
                 <div class="toolbar">
+                    <div class="chips">
+                        <div class="chip">Pending <span>{{ $counts['pending'] }}</span></div>
+                        <div class="chip">Approved <span>{{ $counts['approved'] }}</span></div>
+                        <div class="chip">On Loan <span>{{ $counts['on_loan'] }}</span></div>
+                    </div>
                     <form class="search" method="GET" action="{{ route('borrow.index') }}">
                         <input type="text" name="search" placeholder="Search Request" value="{{ $search }}">
                     </form>
-                    <button class="btn" type="button">+ New Request</button>
                 </div>
 
                 <table>
@@ -46,10 +50,10 @@
                             <th>Request ID</th>
                             <th>User</th>
                             <th>Asset</th>
-                            <th>Borrow Date</th>
+                            <th>Request Date</th>
                             <th>Duration</th>
                             <th>Status</th>
-                            <th>Action</th>
+                            <th>Approve Date</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -62,16 +66,21 @@
                                 <td>{{ $row['duration'] }}</td>
                                 <td>
                                     @php
-                                        $statusClass = strtolower($row['status']);
+                                        $statusKey = strtolower(str_replace(' ', '', $row['status']));
                                     @endphp
-                                    <span class="status {{ $statusClass }}">{{ $row['status'] }}</span>
-                                </td>
-                                <td>
-                                    <div class="actions">
-                                        <button type="button">Approve</button>
-                                        <button type="button">Reject</button>
+                                    <div class="status-wrap">
+                                        <span class="status {{ $statusKey }}">{{ $row['status'] }}</span>
+                                        @if ($row['status'] === 'Pending')
+                                            <div class="icons">
+                                                <span class="icon approve">✓</span>
+                                                <span class="icon reject">✕</span>
+                                            </div>
+                                        @elseif ($row['status'] === 'Approved')
+                                            <span class="pill">Hand Over</span>
+                                        @endif
                                     </div>
                                 </td>
+                                <td>{{ $row['approve_date'] }}</td>
                             </tr>
                         @empty
                             <tr>

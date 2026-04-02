@@ -35,31 +35,34 @@
             <section class="panel">
                 <div class="toolbar">
                     <form class="search" method="GET" action="{{ route('borrow.active') }}">
-                        <input type="text" name="search" placeholder="Search Borrow" value="{{ $search }}">
+                        <input type="text" name="search" placeholder="Search Request" value="{{ $search }}">
                     </form>
-                    <button class="btn" type="button">+ New Borrow</button>
                 </div>
 
                 <table>
                     <thead>
                         <tr>
                             <th>Borrow ID</th>
+                            <th>Request ID</th>
                             <th>User</th>
                             <th>Asset</th>
                             <th>Borrow Date</th>
                             <th>Due Date</th>
+                            <th>Handover PIC</th>
                             <th>Status</th>
-                            <th>Action</th>
+                            <th>Return PIC</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse ($borrows as $row)
                             <tr>
                                 <td>{{ $row['id'] }}</td>
+                                <td>{{ $row['request_id'] }}</td>
                                 <td>{{ $row['user'] }}</td>
                                 <td>{{ $row['asset'] }}</td>
                                 <td>{{ $row['borrow_date'] }}</td>
                                 <td>{{ $row['due_date'] }}</td>
+                                <td>{{ $row['handover_pic'] }}</td>
                                 <td>
                                     @php
                                         $statusClass = strtolower(str_replace(' ', '', $row['status']));
@@ -67,15 +70,13 @@
                                     <span class="status {{ $statusClass }}">{{ $row['status'] }}</span>
                                 </td>
                                 <td>
-                                    <div class="actions">
-                                        <button type="button">Return</button>
-                                        <button type="button">Extend</button>
-                                    </div>
+                                    <span>{{ $row['return_pic'] }}</span>
+                                    <span class="icon">✎</span>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7">Belum ada data pinjaman.</td>
+                                <td colspan="9">Belum ada data pinjaman.</td>
                             </tr>
                         @endforelse
                     </tbody>

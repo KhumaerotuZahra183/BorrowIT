@@ -18,18 +18,19 @@ body {
     color: var(--ink);
 }
 .shell {
-    max-width: 1200px;
-    margin: 26px auto;
+    max-width: none;
+    width: 100%;
+    margin: 0;
     background: #efeff2;
-    border-radius: 14px;
-    box-shadow: 0 22px 60px rgba(0, 0, 0, 0.2);
+    border-radius: 0;
+    box-shadow: none;
     display: grid;
     grid-template-columns: 220px 1fr;
-    min-height: 720px;
+    min-height: 100vh;
 }
 .sidebar {
     background: linear-gradient(180deg, #1d1039 0%, #110628 100%);
-    border-radius: 14px 0 0 14px;
+    border-radius: 0;
     color: #fff;
     padding: 22px 18px;
     display: flex;
@@ -147,6 +148,24 @@ table {
     font-family: "Source Sans 3", "Helvetica Neue", sans-serif;
     font-size: 12px;
 }
+table input {
+    width: 100%;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 10px;
+    background: #f6f4f8;
+}
+table th {
+    width: 160px;
+}
+.alert {
+    background: #fff5d9;
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 12px;
+    font-family: "Source Sans 3", "Helvetica Neue", sans-serif;
+    margin-bottom: 12px;
+}
 th, td {
     text-align: left;
     padding: 8px 6px;
@@ -163,6 +182,7 @@ th {
 .actions {
     display: flex;
     gap: 8px;
+    align-items: center;
 }
 .actions button {
     border: none;
@@ -194,6 +214,6 @@ th {
 }
 @media (max-width: 960px) {
     .shell { grid-template-columns: 1fr; }
-    .sidebar { border-radius: 14px 14px 0 0; flex-direction: row; flex-wrap: wrap; }
+    .sidebar { border-radius: 0; flex-direction: row; flex-wrap: wrap; }
     .toolbar { flex-direction: column; align-items: stretch; }
 }

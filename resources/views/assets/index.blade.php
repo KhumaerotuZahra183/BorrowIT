@@ -37,9 +37,12 @@
                     <form class="search" method="GET" action="{{ route('assets.index') }}">
                         <input type="text" name="search" placeholder="Search Asset" value="{{ $search }}">
                     </form>
-                    <button class="btn" type="button">+ Add New Asset</button>
+                    <a class="btn" href="{{ route('assets.create') }}" style="text-decoration:none;">+ Add New Asset</a>
                 </div>
 
+                @if (session('status'))
+                    <div class="status">{{ session('status') }}</div>
+                @endif
                 <table>
                     <thead>
                         <tr>
@@ -59,8 +62,12 @@
                                 <td>{{ $row->available }}</td>
                                 <td>
                                     <div class="actions">
-                                        <button type="button" title="Edit">Edit</button>
-                                        <button type="button" title="Delete">Delete</button>
+                                        <a class="btn" href="{{ route('assets.edit', $row) }}" style="text-decoration:none;">Edit</a>
+                                        <form method="POST" action="{{ route('assets.destroy', $row) }}" onsubmit="return confirm('Hapus asset ini?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button class="btn" type="submit">Delete</button>
+                                        </form>
                                     </div>
                                 </td>
                             </tr>

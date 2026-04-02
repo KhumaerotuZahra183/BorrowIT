@@ -20,11 +20,11 @@ body {
     place-items: center;
 }
 .frame {
-    width: min(1080px, 92vw);
-    min-height: 78vh;
+    width: 100vw;
+    min-height: 100vh;
     background: #f8f7f6;
-    border-radius: 12px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+    border-radius: 0;
+    box-shadow: none;
     display: grid;
     place-items: center;
     padding: 48px 24px;

@@ -37,9 +37,12 @@
                     <form class="search" method="GET" action="{{ route('users.index') }}">
                         <input type="text" name="search" placeholder="Search User" value="{{ $search }}">
                     </form>
-                    <button class="btn" type="button">+ Add New User</button>
+                    <a class="btn" href="{{ route('users.create') }}" style="text-decoration:none;">+ Add New User</a>
                 </div>
 
+                @if (session('status'))
+                    <div class="status">{{ session('status') }}</div>
+                @endif
                 <table>
                     <thead>
                         <tr>
@@ -61,8 +64,12 @@
                                 <td><span class="status">{{ $row->status ?? 'Active' }}</span></td>
                                 <td>
                                     <div class="actions">
-                                        <button type="button" title="Edit">Edit</button>
-                                        <button type="button" title="Delete">Delete</button>
+                                        <a class="btn" href="{{ route('users.edit', $row) }}" style="text-decoration:none;">Edit</a>
+                                        <form method="POST" action="{{ route('users.destroy', $row) }}" onsubmit="return confirm('Hapus user ini?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button class="btn" type="submit">Delete</button>
+                                        </form>
                                     </div>
                                 </td>
                             </tr>

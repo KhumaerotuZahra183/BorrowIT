@@ -21,18 +21,19 @@ body {
     color: var(--ink);
 }
 .shell {
-    max-width: 1200px;
-    margin: 26px auto;
+    max-width: none;
+    width: 100%;
+    margin: 0;
     background: #efeff2;
-    border-radius: 14px;
-    box-shadow: 0 22px 60px rgba(0, 0, 0, 0.2);
+    border-radius: 0;
+    box-shadow: none;
     display: grid;
     grid-template-columns: 220px 1fr;
-    min-height: 720px;
+    min-height: 100vh;
 }
 .sidebar {
     background: linear-gradient(180deg, #1d1039 0%, #110628 100%);
-    border-radius: 14px 0 0 14px;
+    border-radius: 0;
     color: #fff;
     padding: 22px 18px;
     display: flex;
@@ -201,6 +202,6 @@ th {
 }
 @media (max-width: 960px) {
     .shell { grid-template-columns: 1fr; }
-    .sidebar { border-radius: 14px 14px 0 0; flex-direction: row; flex-wrap: wrap; }
+    .sidebar { border-radius: 0; flex-direction: row; flex-wrap: wrap; }
     .grid { grid-template-columns: 1fr; }
 }
