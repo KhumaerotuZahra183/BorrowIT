@@ -16,6 +16,11 @@
                 <a class="active" href="{{ route('assets.index') }}">Asset Management</a>
                 <a href="{{ route('borrow.index') }}">Borrow Request</a>
                 <a href="{{ route('borrow.active') }}">Active Borrow</a>
+                <a href="{{ route('notifications.index') }}">Notification</a>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button class="btn" type="submit">Logout</button>
+                </form>
             </nav>
         </aside>
 

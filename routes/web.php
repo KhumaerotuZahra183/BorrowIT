@@ -3,6 +3,8 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -31,3 +33,17 @@ Route::put('/assets/{asset}', [AdminController::class, 'updateAsset'])->name('as
 Route::delete('/assets/{asset}', [AdminController::class, 'destroyAsset'])->name('assets.destroy');
 Route::get('/borrow-requests', [AdminController::class, 'borrowRequests'])->name('borrow.index');
 Route::get('/active-borrows', [AdminController::class, 'activeBorrows'])->name('borrow.active');
+Route::post('/borrow-requests/{borrowRequest}/approve', [AdminController::class, 'approveRequest'])->name('borrow.approve');
+Route::post('/borrow-requests/{borrowRequest}/reject', [AdminController::class, 'rejectRequest'])->name('borrow.reject');
+Route::get('/borrow-requests/{borrowRequest}/handover', [AdminController::class, 'handoverForm'])->name('borrow.handover');
+Route::post('/borrow-requests/{borrowRequest}/handover', [AdminController::class, 'handoverStore'])->name('borrow.handover.store');
+Route::get('/active-borrows/{borrow}/return', [AdminController::class, 'returnForm'])->name('borrow.return');
+Route::post('/active-borrows/{borrow}/return', [AdminController::class, 'returnStore'])->name('borrow.return.store');
+
+Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+Route::post('/notifications/read-all', [NotificationController::class, 'readAll'])->name('notifications.read');
+
+Route::get('/user/dashboard', [UserController::class, 'dashboard'])->name('user.dashboard');
+Route::get('/user/borrowings', [UserController::class, 'myBorrowings'])->name('user.borrowings');
+Route::get('/user/borrowings/new', [UserController::class, 'createBorrowRequest'])->name('user.borrowings.new');
+Route::post('/user/borrowings', [UserController::class, 'storeBorrowRequest'])->name('user.borrowings.store');

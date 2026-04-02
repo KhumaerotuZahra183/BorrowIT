@@ -16,26 +16,33 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'department' => 'IT',
-            'role' => 'Admin',
-            'status' => 'Active',
-        ]);
+        User::updateOrCreate(
+            ['email' => 'test@example.com'],
+            [
+                'name' => 'Test User',
+                'department' => 'IT',
+                'role' => 'Admin',
+                'status' => 'Active',
+                'password' => bcrypt('password'),
+            ]
+        );
 
-        Asset::create([
-            'asset_id' => 'BPI-26-0001',
-            'asset_number' => 'BPI-SO-0001',
-            'asset_name' => 'Projector',
-            'available' => 1,
-        ]);
+        Asset::firstOrCreate(
+            ['asset_number' => 'BPI-SO-0001'],
+            [
+                'asset_id' => 'BPI-26-0001',
+                'asset_name' => 'Projector',
+                'available' => 1,
+            ]
+        );
 
-        Asset::create([
-            'asset_id' => 'BPI-26-0002',
-            'asset_number' => 'BPI-SO-0002',
-            'asset_name' => 'Remote',
-            'available' => 1,
-        ]);
+        Asset::firstOrCreate(
+            ['asset_number' => 'BPI-SO-0002'],
+            [
+                'asset_id' => 'BPI-26-0002',
+                'asset_name' => 'Remote',
+                'available' => 1,
+            ]
+        );
     }
 }

@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Asset | BorrowIT</title>
-    <link rel="stylesheet" href="{{ asset('css/asset-management.css') }}">
+    <title>Hand Over | BorrowIT</title>
+    <link rel="stylesheet" href="{{ asset('css/borrow-request.css') }}">
 </head>
 <body>
     <div class="shell">
@@ -13,8 +13,8 @@
             <nav class="nav">
                 <a href="{{ route('dashboard') }}">Dashboard</a>
                 <a href="{{ route('users.index') }}">Manage Users</a>
-                <a class="active" href="{{ route('assets.index') }}">Asset Management</a>
-                <a href="{{ route('borrow.index') }}">Borrow Request</a>
+                <a href="{{ route('assets.index') }}">Asset Management</a>
+                <a class="active" href="{{ route('borrow.index') }}">Borrow Request</a>
                 <a href="{{ route('borrow.active') }}">Active Borrow</a>
                 <a href="{{ route('notifications.index') }}">Notification</a>
                 <form method="POST" action="{{ route('logout') }}">
@@ -26,14 +26,10 @@
 
         <main class="content">
             <div class="topbar">
-                <h1>Add Asset</h1>
+                <h1>Hand Over</h1>
                 <div class="profile">
                     <div class="avatar">{{ strtoupper(substr($user->name, 0, 1)) }}</div>
                     <span>{{ $user->name }}</span>
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button class="logout" type="submit">Log Out</button>
-                    </form>
                 </div>
             </div>
 
@@ -41,29 +37,33 @@
                 @if ($errors->any())
                     <div class="alert">{{ $errors->first() }}</div>
                 @endif
-                <form method="POST" action="{{ route('assets.store') }}">
+                <form method="POST" action="{{ route('borrow.handover.store', $borrowRequest) }}">
                     @csrf
                     <table>
                         <tr>
-                            <th>Asset ID</th>
-                            <td><input type="text" value="Auto: BPI-YY-NNNN" disabled></td>
+                            <th>Request ID</th>
+                            <td>BR-{{ str_pad((string) $borrowRequest->id, 3, '0', STR_PAD_LEFT) }}</td>
                         </tr>
                         <tr>
-                            <th>Asset Number</th>
-                            <td><input type="text" name="asset_number" value="{{ old('asset_number') }}" required></td>
+                            <th>User</th>
+                            <td>{{ $borrowRequest->user->name }}</td>
                         </tr>
                         <tr>
-                            <th>Asset Name</th>
-                            <td><input type="text" name="asset_name" value="{{ old('asset_name') }}" required></td>
+                            <th>Asset</th>
+                            <td>{{ $borrowRequest->asset->asset_name }}</td>
                         </tr>
                         <tr>
-                            <th>Available</th>
-                            <td><input type="number" name="available" value="{{ old('available', 0) }}" min="0" required></td>
+                            <th>Borrow Date</th>
+                            <td><input type="date" name="borrow_date" value="{{ old('borrow_date', now()->toDateString()) }}" required></td>
+                        </tr>
+                        <tr>
+                            <th>Handover PIC</th>
+                            <td><input type="text" name="handover_pic" value="{{ old('handover_pic') }}" required></td>
                         </tr>
                     </table>
                     <div style="margin-top:12px;">
                         <button class="btn" type="submit">Save</button>
-                        <a class="btn" href="{{ route('assets.index') }}" style="text-decoration:none;">Cancel</a>
+                        <a class="btn" href="{{ route('borrow.index') }}" style="text-decoration:none;">Cancel</a>
                     </div>
                 </form>
             </section>

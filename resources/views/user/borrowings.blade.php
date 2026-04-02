@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Borrowings | BorrowIT</title>
+    <link rel="stylesheet" href="{{ asset('css/manage-users.css') }}">
+</head>
+<body>
+    <div class="shell">
+        <aside class="sidebar">
+            <div class="brand">Borrow<span>IT</span></div>
+            <nav class="nav">
+                <a href="{{ route('user.dashboard') }}">Dashboard</a>
+                <a class="active" href="{{ route('user.borrowings') }}">My Borrowings</a>
+                <a href="{{ route('notifications.index') }}">Notification</a>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button class="btn" type="submit">Logout</button>
+                </form>
+            </nav>
+        </aside>
+
+        <main class="content">
+            <div class="topbar">
+                <h1>My Borrowings</h1>
+                <div class="profile">
+                    <div class="avatar">{{ strtoupper(substr($user->name, 0, 1)) }}</div>
+                    <span>{{ $user->name }}</span>
+                </div>
+            </div>
+
+            <section class="panel">
+                <div class="toolbar">
+                    <form class="search" method="GET" action="{{ route('user.borrowings') }}">
+                        <input type="text" name="search" placeholder="Search" value="{{ $search }}">
+                    </form>
+                    <a class="btn" href="{{ route('user.borrowings.new') }}" style="text-decoration:none;">+ New Borrow</a>
+                </div>
+
+                @if (session('status'))
+                    <div class="status">{{ session('status') }}</div>
+                @endif
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Request ID</th>
+                            <th>Asset</th>
+                            <th>Request Date</th>
+                            <th>Duration</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($requests as $row)
+                            <tr>
+                                <td>BR-{{ str_pad((string) $row->id, 3, '0', STR_PAD_LEFT) }}</td>
+                                <td>{{ $row->asset->asset_name }}</td>
+                                <td>{{ $row->request_date->format('d-m-Y') }}</td>
+                                <td>{{ $row->duration_days }} Days</td>
+                                <td>{{ $row->status }}</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5">Belum ada request.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+
+                <div class="pagination">
+                    @foreach ($requests->getUrlRange(1, $requests->lastPage()) as $page => $url)
+                        @if ($page == $requests->currentPage())
+                            <span class="current">{{ $page }}</span>
+                        @else
+                            <a href="{{ $url }}">{{ $page }}</a>
+                        @endif
+                    @endforeach
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

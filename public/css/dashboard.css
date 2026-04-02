@@ -63,6 +63,16 @@ body {
     align-items: center;
     gap: 10px;
 }
+.nav form {
+    margin: 0;
+}
+.nav form .btn {
+    width: 100%;
+    text-align: left;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+    color: #ffffff;
+}
 .nav a.active,
 .nav a:hover {
     background: rgba(255, 255, 255, 0.12);
@@ -111,6 +121,16 @@ body {
     cursor: pointer;
     font-family: "Source Sans 3", "Helvetica Neue", sans-serif;
     font-size: 12px;
+}
+.btn {
+    border: none;
+    background: #6f4bd6;
+    color: #fff;
+    border-radius: 18px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-family: "Source Sans 3", "Helvetica Neue", sans-serif;
+    cursor: pointer;
 }
 .stats {
     display: grid;
@@ -172,6 +192,16 @@ th {
 .status.overdue { color: var(--danger); }
 .status.returned { color: var(--success); }
 .status.hand { color: var(--accent); }
+.status.onloan { color: var(--accent); }
+.status.borrow { color: var(--accent); }
+select {
+    border: none;
+    border-radius: 8px;
+    padding: 4px 8px;
+    background: #f6f4f8;
+    font-family: "Source Sans 3", "Helvetica Neue", sans-serif;
+    font-size: 12px;
+}
 .chart {
     display: grid;
     grid-template-columns: repeat(3, 1fr);

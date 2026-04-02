@@ -16,6 +16,11 @@
                 <a class="active" href="{{ route('assets.index') }}">Asset Management</a>
                 <a href="{{ route('borrow.index') }}">Borrow Request</a>
                 <a href="{{ route('borrow.active') }}">Active Borrow</a>
+                <a href="{{ route('notifications.index') }}">Notification</a>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button class="btn" type="submit">Logout</button>
+                </form>
             </nav>
         </aside>
 
@@ -42,7 +47,7 @@
                     <table>
                         <tr>
                             <th>Asset ID</th>
-                            <td><input type="text" name="asset_id" value="{{ old('asset_id', $asset->asset_id) }}" required></td>
+                            <td><input type="text" name="asset_id" value="{{ old('asset_id', $asset->asset_id) }}" readonly></td>
                         </tr>
                         <tr>
                             <th>Asset Number</th>

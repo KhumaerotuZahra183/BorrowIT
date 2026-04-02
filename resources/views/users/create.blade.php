@@ -16,6 +16,11 @@
                 <a href="{{ route('assets.index') }}">Asset Management</a>
                 <a href="{{ route('borrow.index') }}">Borrow Request</a>
                 <a href="{{ route('borrow.active') }}">Active Borrow</a>
+                <a href="{{ route('notifications.index') }}">Notification</a>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button class="btn" type="submit">Logout</button>
+                </form>
             </nav>
         </aside>
 
@@ -49,15 +54,32 @@
                         </tr>
                         <tr>
                             <th>Department</th>
-                            <td><input type="text" name="department" value="{{ old('department') }}"></td>
+                            <td>
+                                <select name="department">
+                                    <option value="">Select Department</option>
+                                    @foreach (['IT', 'HR', 'Finance', 'Operations'] as $dept)
+                                        <option value="{{ $dept }}" @selected(old('department') === $dept)>{{ $dept }}</option>
+                                    @endforeach
+                                </select>
+                            </td>
                         </tr>
                         <tr>
                             <th>Role</th>
-                            <td><input type="text" name="role" value="{{ old('role', 'User') }}" required></td>
+                            <td>
+                                <select name="role" required>
+                                    <option value="Admin" @selected(old('role') === 'Admin')>Admin</option>
+                                    <option value="User" @selected(old('role', 'User') === 'User')>User</option>
+                                </select>
+                            </td>
                         </tr>
                         <tr>
                             <th>Status</th>
-                            <td><input type="text" name="status" value="{{ old('status', 'Active') }}" required></td>
+                            <td>
+                                <select name="status" required>
+                                    <option value="Active" @selected(old('status', 'Active') === 'Active')>Active</option>
+                                    <option value="Inactive" @selected(old('status') === 'Inactive')>Inactive</option>
+                                </select>
+                            </td>
                         </tr>
                         <tr>
                             <th>Password</th>

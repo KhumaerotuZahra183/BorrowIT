@@ -10,7 +10,7 @@ return new class extends Migration {
         Schema::create('assets', function (Blueprint $table) {
             $table->id();
             $table->string('asset_id')->unique();
-            $table->string('asset_number')->unique();
+            $table->string('asset_number', 30)->unique();
             $table->string('asset_name');
             $table->unsignedInteger('available')->default(0);
             $table->timestamps();

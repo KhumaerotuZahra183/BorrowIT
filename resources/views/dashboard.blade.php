@@ -16,6 +16,11 @@
                 <a href="{{ route('assets.index') }}">Asset Management</a>
                 <a href="{{ route('borrow.index') }}">Borrow Request</a>
                 <a href="{{ route('borrow.active') }}">Active Borrow</a>
+                <a href="{{ route('notifications.index') }}">Notification</a>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button class="btn" type="submit">Logout</button>
+                </form>
             </nav>
         </aside>
 
@@ -71,26 +76,45 @@
                         <tbody>
                             @foreach ($recentRequests as $request)
                                 <tr>
-                                    <td>{{ $request['id'] }}</td>
-                                    <td>{{ $request['user'] }}</td>
-                                    <td>{{ $request['asset'] }}</td>
-                                    <td>{{ $request['borrow_date'] }}</td>
-                                    <td>{{ $request['duration'] }}</td>
+                                    <td>BR-{{ str_pad((string) $request->id, 3, '0', STR_PAD_LEFT) }}</td>
+                                    <td>{{ $request->user->name }}</td>
+                                    <td>{{ $request->asset->asset_name }}</td>
+                                    <td>{{ $request->request_date->format('d-m-Y') }}</td>
+                                    <td>{{ $request->duration_days }} Days</td>
                                     <td>
                                         @php
-                                            $statusClass = strtolower(str_replace(' ', '', $request['status']));
+                                            $statusClass = strtolower(str_replace(' ', '', $request->status));
                                         @endphp
-                                        <span class="status {{ $statusClass }}">{{ $request['status'] }}</span>
+                                        <span class="status {{ $statusClass }}">{{ $request->status }}</span>
                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
+                    <div style="margin-top:8px;">
+                        <a class="btn" href="{{ route('borrow.index') }}" style="text-decoration:none;">View All</a>
+                    </div>
                 </div>
 
                 <div class="panel">
-                    <h3>Monthly Borrowing</h3>
-                    <div class="chart">
+                    <div style="display:flex; align-items:center; justify-content:space-between;">
+                        <h3>Monthly Borrowing</h3>
+                        <form method="GET" action="{{ route('dashboard') }}" style="display:flex; gap:8px; align-items:center;">
+                            <select name="month">
+                                <option value="0">All Months</option>
+                                @for ($m = 1; $m <= 12; $m++)
+                                    <option value="{{ $m }}" @selected($filters['month'] == $m)>{{ $m }}</option>
+                                @endfor
+                            </select>
+                            <select name="year">
+                                @for ($y = now()->year - 2; $y <= now()->year + 1; $y++)
+                                    <option value="{{ $y }}" @selected($filters['year'] == $y)>{{ $y }}</option>
+                                @endfor
+                            </select>
+                            <button class="btn" type="submit">Filter</button>
+                        </form>
+                    </div>
+                    <div class="chart" id="monthlyChart">
                         @foreach ($chart['values'] as $value)
                             @php $height = 20 + ($value * 6); @endphp
                             <div class="bar" style="height: {{ $height }}px;">{{ $value }}</div>
@@ -100,6 +124,24 @@
                         @foreach ($chart['labels'] as $label)
                             <div>{{ $label }}</div>
                         @endforeach
+                    </div>
+                    <div id="monthlyDetail" style="display:none; margin-top:12px;">
+                        <h4 style="margin:0 0 6px;">Most Borrowed Items</h4>
+                        <ul style="margin:0; padding-left:16px;">
+                            @forelse ($mostBorrowed as $row)
+                                <li>{{ $row['name'] ?? '-' }} ({{ $row['total'] }})</li>
+                            @empty
+                                <li>No data</li>
+                            @endforelse
+                        </ul>
+                        <h4 style="margin:12px 0 6px;">Returned Items</h4>
+                        <ul style="margin:0; padding-left:16px;">
+                            @forelse ($returnedItems as $row)
+                                <li>{{ $row['name'] ?? '-' }} ({{ $row['total'] }})</li>
+                            @empty
+                                <li>No data</li>
+                            @endforelse
+                        </ul>
                     </div>
                 </div>
 
@@ -119,24 +161,46 @@
                         <tbody>
                             @foreach ($activeBorrows as $borrow)
                                 <tr>
-                                    <td>{{ $borrow['id'] }}</td>
-                                    <td>{{ $borrow['user'] }}</td>
-                                    <td>{{ $borrow['asset'] }}</td>
-                                    <td>{{ $borrow['borrow_date'] }}</td>
-                                    <td>{{ $borrow['due_date'] }}</td>
+                                    <td>BR-{{ str_pad((string) $borrow->id, 3, '0', STR_PAD_LEFT) }}</td>
+                                    <td>{{ $borrow->user->name }}</td>
+                                    <td>{{ $borrow->asset->asset_name }}</td>
+                                    <td>{{ $borrow->borrow_date->format('d-m-Y') }}</td>
+                                    <td>{{ $borrow->due_date->format('d-m-Y') }}</td>
                                     <td>
                                         @php
-                                            $statusClass = strtolower(str_replace(' ', '', $borrow['status']));
+                                            $statusClass = strtolower(str_replace(' ', '', $borrow->status));
                                         @endphp
-                                        <span class="status {{ $statusClass }}">{{ $borrow['status'] }}</span>
+                                        <span class="status {{ $statusClass }}">{{ $borrow->status }}</span>
                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
+                    <div style="margin-top:8px;">
+                        <a class="btn" href="{{ route('borrow.active') }}" style="text-decoration:none;">View All</a>
+                    </div>
+                </div>
+                <div class="panel" style="grid-column: 1 / -1;">
+                    <h3>Notifications</h3>
+                    <ul style="margin:0; padding-left:16px;">
+                        @forelse ($notifications as $notif)
+                            <li>{{ $notif->message }}</li>
+                        @empty
+                            <li>Belum ada notifikasi.</li>
+                        @endforelse
+                    </ul>
                 </div>
             </section>
         </main>
     </div>
+    <script>
+        const chart = document.getElementById('monthlyChart');
+        const detail = document.getElementById('monthlyDetail');
+        if (chart && detail) {
+            chart.addEventListener('click', () => {
+                detail.style.display = detail.style.display === 'none' ? 'block' : 'none';
+            });
+        }
+    </script>
 </body>
 </html>

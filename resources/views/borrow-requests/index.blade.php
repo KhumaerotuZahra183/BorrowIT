@@ -16,6 +16,11 @@
                 <a href="{{ route('assets.index') }}">Asset Management</a>
                 <a class="active" href="{{ route('borrow.index') }}">Borrow Request</a>
                 <a href="{{ route('borrow.active') }}">Active Borrow</a>
+                <a href="{{ route('notifications.index') }}">Notification</a>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button class="btn" type="submit">Logout</button>
+                </form>
             </nav>
         </aside>
 
@@ -37,7 +42,7 @@
                     <div class="chips">
                         <div class="chip">Pending <span>{{ $counts['pending'] }}</span></div>
                         <div class="chip">Approved <span>{{ $counts['approved'] }}</span></div>
-                        <div class="chip">On Loan <span>{{ $counts['on_loan'] }}</span></div>
+                        <div class="chip">Borrowed <span>{{ $counts['on_loan'] }}</span></div>
                     </div>
                     <form class="search" method="GET" action="{{ route('borrow.index') }}">
                         <input type="text" name="search" placeholder="Search Request" value="{{ $search }}">
@@ -59,28 +64,34 @@
                     <tbody>
                         @forelse ($requests as $row)
                             <tr>
-                                <td>{{ $row['id'] }}</td>
-                                <td>{{ $row['user'] }}</td>
-                                <td>{{ $row['asset'] }}</td>
-                                <td>{{ $row['borrow_date'] }}</td>
-                                <td>{{ $row['duration'] }}</td>
+                                <td>BR-{{ str_pad((string) $row->id, 3, '0', STR_PAD_LEFT) }}</td>
+                                <td>{{ $row->user->name }}</td>
+                                <td>{{ $row->asset->asset_name }}</td>
+                                <td>{{ $row->request_date->format('d-m-Y') }}</td>
+                                <td>{{ $row->duration_days }} Days</td>
                                 <td>
                                     @php
-                                        $statusKey = strtolower(str_replace(' ', '', $row['status']));
+                                        $statusKey = strtolower(str_replace(' ', '', $row->status));
                                     @endphp
                                     <div class="status-wrap">
-                                        <span class="status {{ $statusKey }}">{{ $row['status'] }}</span>
-                                        @if ($row['status'] === 'Pending')
+                                        <span class="status {{ $statusKey }}">{{ $row->status }}</span>
+                                        @if ($row->status === 'Pending')
                                             <div class="icons">
-                                                <span class="icon approve">✓</span>
-                                                <span class="icon reject">✕</span>
+                                                <form method="POST" action="{{ route('borrow.approve', $row) }}">
+                                                    @csrf
+                                                    <button class="icon approve" type="submit">✓</button>
+                                                </form>
+                                                <form method="POST" action="{{ route('borrow.reject', $row) }}">
+                                                    @csrf
+                                                    <button class="icon reject" type="submit">✕</button>
+                                                </form>
                                             </div>
-                                        @elseif ($row['status'] === 'Approved')
-                                            <span class="pill">Hand Over</span>
+                                        @elseif ($row->status === 'Approved')
+                                            <a class="pill" href="{{ route('borrow.handover', $row) }}">Hand Over</a>
                                         @endif
                                     </div>
                                 </td>
-                                <td>{{ $row['approve_date'] }}</td>
+                                <td>{{ $row->approve_date ? $row->approve_date->format('d-m-Y') : '-' }}</td>
                             </tr>
                         @empty
                             <tr>
@@ -91,11 +102,11 @@
                 </table>
 
                 <div class="pagination">
-                    @foreach ($pages as $page)
-                        @if ($page === $currentPage)
+                    @foreach ($requests->getUrlRange(1, $requests->lastPage()) as $page => $url)
+                        @if ($page == $requests->currentPage())
                             <span class="current">{{ $page }}</span>
                         @else
-                            <a href="{{ route('borrow.index', ['page' => $page, 'search' => $search]) }}">{{ $page }}</a>
+                            <a href="{{ $url }}">{{ $page }}</a>
                         @endif
                     @endforeach
                 </div>

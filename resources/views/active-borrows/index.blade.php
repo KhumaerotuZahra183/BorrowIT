@@ -16,6 +16,11 @@
                 <a href="{{ route('assets.index') }}">Asset Management</a>
                 <a href="{{ route('borrow.index') }}">Borrow Request</a>
                 <a class="active" href="{{ route('borrow.active') }}">Active Borrow</a>
+                <a href="{{ route('notifications.index') }}">Notification</a>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button class="btn" type="submit">Logout</button>
+                </form>
             </nav>
         </aside>
 
@@ -56,22 +61,24 @@
                     <tbody>
                         @forelse ($borrows as $row)
                             <tr>
-                                <td>{{ $row['id'] }}</td>
-                                <td>{{ $row['request_id'] }}</td>
-                                <td>{{ $row['user'] }}</td>
-                                <td>{{ $row['asset'] }}</td>
-                                <td>{{ $row['borrow_date'] }}</td>
-                                <td>{{ $row['due_date'] }}</td>
-                                <td>{{ $row['handover_pic'] }}</td>
+                                <td>BR-{{ str_pad((string) $row->id, 3, '0', STR_PAD_LEFT) }}</td>
+                                <td>BR-{{ str_pad((string) $row->borrow_request_id, 3, '0', STR_PAD_LEFT) }}</td>
+                                <td>{{ $row->user->name }}</td>
+                                <td>{{ $row->asset->asset_name }}</td>
+                                <td>{{ $row->borrow_date->format('d-m-Y') }}</td>
+                                <td>{{ $row->due_date->format('d-m-Y') }}</td>
+                                <td>{{ $row->handover_pic ?? '-' }}</td>
                                 <td>
                                     @php
-                                        $statusClass = strtolower(str_replace(' ', '', $row['status']));
+                                        $statusClass = strtolower(str_replace(' ', '', $row->status));
                                     @endphp
-                                    <span class="status {{ $statusClass }}">{{ $row['status'] }}</span>
+                                    <span class="status {{ $statusClass }}">{{ $row->status }}</span>
                                 </td>
                                 <td>
-                                    <span>{{ $row['return_pic'] }}</span>
-                                    <span class="icon">✎</span>
+                                    <span>{{ $row->return_pic ?? '-' }}</span>
+                                    @if (!$row->returned_at)
+                                        <a class="icon" href="{{ route('borrow.return', $row) }}">✎</a>
+                                    @endif
                                 </td>
                             </tr>
                         @empty
@@ -83,11 +90,11 @@
                 </table>
 
                 <div class="pagination">
-                    @foreach ($pages as $page)
-                        @if ($page === $currentPage)
+                    @foreach ($borrows->getUrlRange(1, $borrows->lastPage()) as $page => $url)
+                        @if ($page == $borrows->currentPage())
                             <span class="current">{{ $page }}</span>
                         @else
-                            <a href="{{ route('borrow.active', ['page' => $page, 'search' => $search]) }}">{{ $page }}</a>
+                            <a href="{{ $url }}">{{ $page }}</a>
                         @endif
                     @endforeach
                 </div>
