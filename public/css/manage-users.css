@@ -84,16 +84,14 @@ body {
     justify-content: space-between;
     margin-bottom: 18px;
 }
-.topbar h1 {
-    margin: 0;
-    font-size: 20px;
-}
-.profile {
+.topbar-actions {
     display: flex;
     align-items: center;
     gap: 10px;
-    font-family: "Source Sans 3", "Helvetica Neue", sans-serif;
-    font-size: 13px;
+}
+.topbar h1 {
+    margin: 0;
+    font-size: 20px;
 }
 .avatar {
     width: 34px;
@@ -104,6 +102,80 @@ body {
     place-items: center;
     font-weight: 700;
     color: #4a2b2b;
+}
+.notif-button {
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    border-radius: 10px;
+    background: #ffffff;
+    box-shadow: 0 8px 20px rgba(13, 14, 30, 0.12);
+    color: var(--ink);
+    text-decoration: none;
+}
+.notif-button:hover {
+    background: #f5f3f9;
+}
+.notif-icon {
+    width: 18px;
+    height: 18px;
+    display: block;
+}
+.profile-dropdown {
+    position: relative;
+}
+.profile-dropdown summary {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    padding: 4px 6px;
+    border-radius: 12px;
+    font-family: "Source Sans 3", "Helvetica Neue", sans-serif;
+    font-size: 13px;
+}
+.profile-dropdown summary::-webkit-details-marker {
+    display: none;
+}
+.profile-dropdown[open] summary {
+    background: #f2eff8;
+}
+.caret {
+    width: 8px;
+    height: 8px;
+    border-right: 2px solid #6b6b77;
+    border-bottom: 2px solid #6b6b77;
+    transform: rotate(45deg);
+}
+.profile-menu {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 8px);
+    min-width: 180px;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 12px;
+    box-shadow: var(--shadow);
+    display: grid;
+    gap: 10px;
+    z-index: 10;
+}
+.profile-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.profile-title {
+    font-weight: 600;
+    font-size: 13px;
+    font-family: "Source Sans 3", "Helvetica Neue", sans-serif;
+}
+.profile-role {
+    font-size: 11px;
+    color: var(--muted);
+    font-family: "Source Sans 3", "Helvetica Neue", sans-serif;
 }
 .logout {
     border: none;

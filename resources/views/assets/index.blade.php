@@ -27,13 +27,32 @@
         <main class="content">
             <div class="topbar">
                 <h1>Asset Management</h1>
-                <div class="profile">
-                    <div class="avatar">{{ strtoupper(substr($user->name, 0, 1)) }}</div>
-                    <span>{{ $user->name }}</span>
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button class="logout" type="submit">Log Out</button>
-                    </form>
+                <div class="topbar-actions">
+                    <a class="notif-button" href="{{ route('notifications.index') }}" aria-label="Notification">
+                        <svg class="notif-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <path d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22Zm7-6V11a7 7 0 0 0-5-6.71V3a2 2 0 0 0-4 0v1.29A7 7 0 0 0 5 11v5l-2 2v1h18v-1l-2-2Z" fill="currentColor"/>
+                        </svg>
+                    </a>
+                    <details class="profile-dropdown">
+                        <summary>
+                            <div class="avatar">{{ strtoupper(substr($user->name, 0, 1)) }}</div>
+                            <span class="profile-name">{{ $user->name }}</span>
+                            <span class="caret" aria-hidden="true"></span>
+                        </summary>
+                        <div class="profile-menu">
+                            <div class="profile-meta">
+                                <div class="avatar">{{ strtoupper(substr($user->name, 0, 1)) }}</div>
+                                <div>
+                                    <div class="profile-title">{{ $user->name }}</div>
+                                    <div class="profile-role">{{ $user->role ?? 'User' }}</div>
+                                </div>
+                            </div>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button class="logout" type="submit">Log Out</button>
+                            </form>
+                        </div>
+                    </details>
                 </div>
             </div>
 

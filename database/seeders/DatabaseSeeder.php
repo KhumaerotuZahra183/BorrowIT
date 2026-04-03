@@ -27,6 +27,17 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+        User::updateOrCreate(
+            ['email' => 'user@ptbpi.co.id'],
+            [
+                'name' => 'Borrow User',
+                'department' => 'Operations',
+                'role' => 'User',
+                'status' => 'Active',
+                'password' => bcrypt('password'),
+            ]
+        );
+
         Asset::firstOrCreate(
             ['asset_number' => 'BPI-SO-0001'],
             [
