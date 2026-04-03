@@ -16,7 +16,6 @@
                 <a href="{{ route('assets.index') }}">Asset Management</a>
                 <a class="active" href="{{ route('borrow.index') }}">Borrow Request</a>
                 <a href="{{ route('borrow.active') }}">Active Borrow</a>
-                <a href="{{ route('notifications.index') }}">Notification</a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button class="btn" type="submit">Logout</button>
@@ -28,11 +27,14 @@
             <div class="topbar">
                 <h1>Hand Over</h1>
                 <div class="topbar-actions">
-                    <a class="notif-button" href="{{ route('notifications.index') }}" aria-label="Notification">
-                        <svg class="notif-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                            <path d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22Zm7-6V11a7 7 0 0 0-5-6.71V3a2 2 0 0 0-4 0v1.29A7 7 0 0 0 5 11v5l-2 2v1h18v-1l-2-2Z" fill="currentColor"/>
-                        </svg>
-                    </a>
+                    <form method="POST" action="{{ route('notifications.read') }}" class="notif-form">
+                        @csrf
+                        <button class="notif-button" type="submit" aria-label="Mark all read">
+                            <svg class="notif-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                <path d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22Zm7-6V11a7 7 0 0 0-5-6.71V3a2 2 0 0 0-4 0v1.29A7 7 0 0 0 5 11v5l-2 2v1h18v-1l-2-2Z" fill="currentColor"/>
+                            </svg>
+                        </button>
+                    </form>
                     <details class="profile-dropdown">
                         <summary>
                             <div class="avatar">{{ strtoupper(substr($user->name, 0, 1)) }}</div>

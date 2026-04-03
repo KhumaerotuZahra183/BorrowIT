@@ -118,12 +118,18 @@ body {
     place-items: center;
     border-radius: 10px;
     background: #ffffff;
+    border: none;
+    padding: 0;
     box-shadow: 0 8px 20px rgba(13, 14, 30, 0.12);
     color: var(--ink);
     text-decoration: none;
+    cursor: pointer;
 }
 .notif-button:hover {
     background: #f5f3f9;
+}
+.notif-form {
+    margin: 0;
 }
 .notif-icon {
     width: 18px;
