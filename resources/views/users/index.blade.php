@@ -9,7 +9,7 @@
 <body>
     <div class="shell">
         <aside class="sidebar">
-            <div class="brand">Borrow<span>IT</span></div>
+            <div class="brand"><img class="brand-logo" src="{{ asset('BIT2-removebg-preview 1.png') }}" alt="BorrowIT"></div>
             <nav class="nav">
                 <a href="{{ route('dashboard') }}">Dashboard</a>
                 <a class="active" href="{{ route('users.index') }}">Manage Users</a>
@@ -28,11 +28,17 @@
                 <h1>Manage Users</h1>
                 <div class="topbar-actions">
                     <form method="POST" action="{{ route('notifications.read') }}" class="notif-form">
+                    @php
+                        $unreadCount = $unreadCount ?? \App\Models\Notification::where('user_id', $user->id)->whereNull('read_at')->count();
+                    @endphp
                         @csrf
                         <button class="notif-button" type="submit" aria-label="Mark all read">
                             <svg class="notif-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                                 <path d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22Zm7-6V11a7 7 0 0 0-5-6.71V3a2 2 0 0 0-4 0v1.29A7 7 0 0 0 5 11v5l-2 2v1h18v-1l-2-2Z" fill="currentColor"/>
                             </svg>
+                            @if ($unreadCount > 0)
+                                <span class="notif-dot" aria-hidden="true"></span>
+                            @endif
                         </button>
                     </form>
                     <details class="profile-dropdown">

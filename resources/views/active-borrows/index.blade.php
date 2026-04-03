@@ -9,7 +9,7 @@
 <body>
     <div class="shell">
         <aside class="sidebar">
-            <div class="brand">Borrow<span>IT</span></div>
+            <div class="brand"><img class="brand-logo" src="{{ asset('BIT2-removebg-preview 1.png') }}" alt="BorrowIT"></div>
             <nav class="nav">
                 <a href="{{ route('dashboard') }}">Dashboard</a>
                 <a href="{{ route('users.index') }}">Manage Users</a>
@@ -28,11 +28,17 @@
                 <h1>Active Borrow</h1>
                 <div class="topbar-actions">
                     <form method="POST" action="{{ route('notifications.read') }}" class="notif-form">
+                    @php
+                        $unreadCount = $unreadCount ?? \App\Models\Notification::where('user_id', $user->id)->whereNull('read_at')->count();
+                    @endphp
                         @csrf
                         <button class="notif-button" type="submit" aria-label="Mark all read">
                             <svg class="notif-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                                 <path d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22Zm7-6V11a7 7 0 0 0-5-6.71V3a2 2 0 0 0-4 0v1.29A7 7 0 0 0 5 11v5l-2 2v1h18v-1l-2-2Z" fill="currentColor"/>
                             </svg>
+                            @if ($unreadCount > 0)
+                                <span class="notif-dot" aria-hidden="true"></span>
+                            @endif
                         </button>
                     </form>
                     <details class="profile-dropdown">
@@ -61,7 +67,7 @@
             <section class="panel">
                 <div class="toolbar">
                     <form class="search" method="GET" action="{{ route('borrow.active') }}">
-                        <input type="text" name="search" placeholder="Search Request" value="{{ $search }}">
+                        <input type="text" name="search" placeholder="Search" value="{{ $search }}">
                     </form>
                 </div>
 
@@ -91,9 +97,16 @@
                                 <td>{{ $row->handover_pic ?? '-' }}</td>
                                 <td>
                                     @php
-                                        $statusClass = strtolower(str_replace(' ', '', $row->status));
+                                        if ($row->returned_at) {
+                                            $displayStatus = 'Returned';
+                                        } elseif ($row->due_date && $row->due_date->toDateString() < now()->toDateString()) {
+                                            $displayStatus = 'Overdue';
+                                        } else {
+                                            $displayStatus = 'Borrow';
+                                        }
+                                        $statusClass = strtolower(str_replace(' ', '', $displayStatus));
                                     @endphp
-                                    <span class="status {{ $statusClass }}">{{ $row->status }}</span>
+                                    <span class="status {{ $statusClass }}">{{ $displayStatus }}</span>
                                 </td>
                                 <td>
                                     <span>{{ $row->return_pic ?? '-' }}</span>

@@ -9,7 +9,7 @@
 <body>
     <div class="shell">
         <aside class="sidebar">
-            <div class="brand">Borrow<span>IT</span></div>
+            <div class="brand"><img class="brand-logo" src="{{ asset('BIT2-removebg-preview 1.png') }}" alt="BorrowIT"></div>
             <nav class="nav">
                 <a class="active" href="{{ route('dashboard') }}">Dashboard</a>
                 <a href="{{ route('users.index') }}">Manage Users</a>
@@ -31,11 +31,17 @@
                 </div>
                 <div class="topbar-actions">
                     <form method="POST" action="{{ route('notifications.read') }}" class="notif-form">
+                    @php
+                        $unreadCount = $unreadCount ?? \App\Models\Notification::where('user_id', $user->id)->whereNull('read_at')->count();
+                    @endphp
                         @csrf
                         <button class="notif-button" type="submit" aria-label="Mark all read">
                             <svg class="notif-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                                 <path d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22Zm7-6V11a7 7 0 0 0-5-6.71V3a2 2 0 0 0-4 0v1.29A7 7 0 0 0 5 11v5l-2 2v1h18v-1l-2-2Z" fill="currentColor"/>
                             </svg>
+                            @if ($unreadCount > 0)
+                                <span class="notif-dot" aria-hidden="true"></span>
+                            @endif
                         </button>
                     </form>
                     <details class="profile-dropdown">
@@ -81,8 +87,11 @@
             </section>
 
             <section class="grid">
-                <div class="panel">
-                    <h3>Recent Borrow Request</h3>
+                <div class="panel recent">
+                    <div class="panel-header">
+                        <h3>Recent Borrow Request</h3>
+                        <a class="panel-link" href="{{ route('borrow.index') }}">View All</a>
+                    </div>
                     <table>
                         <thead>
                             <tr>
@@ -112,15 +121,12 @@
                             @endforeach
                         </tbody>
                     </table>
-                    <div style="margin-top:8px;">
-                        <a class="btn" href="{{ route('borrow.index') }}" style="text-decoration:none;">View All</a>
-                    </div>
                 </div>
 
-                <div class="panel">
-                    <div style="display:flex; align-items:center; justify-content:space-between;">
+                <div class="panel monthly">
+                    <div class="panel-header">
                         <h3>Monthly Borrowing</h3>
-                        <form method="GET" action="{{ route('dashboard') }}" style="display:flex; gap:8px; align-items:center;">
+                        <form method="GET" action="{{ route('dashboard') }}" class="panel-filters">
                             <select name="month">
                                 <option value="0">All Months</option>
                                 @for ($m = 1; $m <= 12; $m++)
@@ -136,14 +142,17 @@
                         </form>
                     </div>
                     <div class="chart" id="monthlyChart">
+                        @php $maxValue = max($chart['values'] ?? [1]); @endphp
                         @foreach ($chart['values'] as $value)
-                            @php $height = 20 + ($value * 6); @endphp
-                            <div class="bar" style="height: {{ $height }}px;">{{ $value }}</div>
+                            @php $height = 16 + (int) round(($maxValue > 0 ? ($value / $maxValue) : 0) * 140); @endphp
+                            <div class="bar" style="height: {{ $height }}px;">
+                                <span class="bar-value">{{ $value }}</span>
+                            </div>
                         @endforeach
                     </div>
                     <div class="labels">
                         @foreach ($chart['labels'] as $label)
-                            <div>{{ $label }}</div>
+                            <span>{{ $label }}</span>
                         @endforeach
                     </div>
                     <div id="monthlyDetail" style="display:none; margin-top:12px;">
@@ -166,8 +175,11 @@
                     </div>
                 </div>
 
-                <div class="panel" style="grid-column: 1 / -1;">
-                    <h3>Active Borrow</h3>
+                <div class="panel active">
+                    <div class="panel-header">
+                        <h3>Active Borrow</h3>
+                        <a class="panel-link" href="{{ route('borrow.active') }}">View All</a>
+                    </div>
                     <table>
                         <thead>
                             <tr>
@@ -189,27 +201,21 @@
                                     <td>{{ $borrow->due_date->format('d-m-Y') }}</td>
                                     <td>
                                         @php
-                                            $statusClass = strtolower(str_replace(' ', '', $borrow->status));
+                                            if ($borrow->returned_at) {
+                                                $displayStatus = 'Returned';
+                                            } elseif ($borrow->due_date && $borrow->due_date->toDateString() < now()->toDateString()) {
+                                                $displayStatus = 'Overdue';
+                                            } else {
+                                                $displayStatus = 'Borrow';
+                                            }
+                                            $statusClass = strtolower(str_replace(' ', '', $displayStatus));
                                         @endphp
-                                        <span class="status {{ $statusClass }}">{{ $borrow->status }}</span>
+                                        <span class="status {{ $statusClass }}">{{ $displayStatus }}</span>
                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
-                    <div style="margin-top:8px;">
-                        <a class="btn" href="{{ route('borrow.active') }}" style="text-decoration:none;">View All</a>
-                    </div>
-                </div>
-                <div class="panel" style="grid-column: 1 / -1;">
-                    <h3>Notifications</h3>
-                    <ul style="margin:0; padding-left:16px;">
-                        @forelse ($notifications as $notif)
-                            <li>{{ $notif->message }}</li>
-                        @empty
-                            <li>Belum ada notifikasi.</li>
-                        @endforelse
-                    </ul>
                 </div>
             </section>
         </main>
