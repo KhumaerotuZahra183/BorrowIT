@@ -19,6 +19,7 @@ Route::get('/change-password', [AuthController::class, 'showChangePassword'])->n
 Route::post('/change-password', [AuthController::class, 'changePassword'])->name('password.change.submit');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('/dashboard/monthly-borrowing', [DashboardController::class, 'monthlyBorrowing'])->name('dashboard.monthly');
 Route::get('/users', [AdminController::class, 'users'])->name('users.index');
 Route::get('/users/create', [AdminController::class, 'createUser'])->name('users.create');
 Route::post('/users', [AdminController::class, 'storeUser'])->name('users.store');

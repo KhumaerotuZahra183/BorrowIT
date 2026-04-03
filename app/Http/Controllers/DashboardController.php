@@ -114,4 +114,71 @@ class DashboardController extends Controller
             'returnedItems' => $returnedItems,
         ]);
     }
+
+    public function monthlyBorrowing(Request $request)
+    {
+        [$user, $redirect] = $this->requireAuth($request);
+        if ($redirect) {
+            return $redirect;
+        }
+
+        if (($user->role ?? 'User') !== 'Admin') {
+            return redirect()->route('user.dashboard');
+        }
+
+        $year = (int) $request->query('year', now()->year);
+        $month = (int) $request->query('month', 0);
+
+        $chartValues = [];
+        $chartLabels = [];
+        for ($m = 1; $m <= 12; $m++) {
+            $chartLabels[] = (string) $m;
+            $chartValues[] = Borrow::whereYear('borrow_date', $year)->whereMonth('borrow_date', $m)->count();
+        }
+
+        $borrowQuery = Borrow::with(['user', 'asset'])->whereYear('borrow_date', $year);
+        if ($month > 0) {
+            $borrowQuery->whereMonth('borrow_date', $month);
+        }
+
+        $borrows = (clone $borrowQuery)
+            ->orderByDesc('borrow_date')
+            ->paginate(8)
+            ->withQueryString();
+
+        $mostBorrowed = (clone $borrowQuery)
+            ->selectRaw('asset_id, COUNT(*) as total')
+            ->groupBy('asset_id')
+            ->orderByDesc('total')
+            ->limit(5)
+            ->get()
+            ->map(function ($row) {
+                return [
+                    'name' => optional($row->asset)->asset_name,
+                    'total' => $row->total,
+                ];
+            });
+
+        $returnedItems = (clone $borrowQuery)
+            ->with(['user', 'asset'])
+            ->whereNotNull('returned_at')
+            ->orderByDesc('returned_at')
+            ->limit(5)
+            ->get();
+
+        return view('dashboard-monthly', [
+            'user' => $user,
+            'borrows' => $borrows,
+            'chart' => [
+                'labels' => $chartLabels,
+                'values' => $chartValues,
+            ],
+            'filters' => [
+                'year' => $year,
+                'month' => $month,
+            ],
+            'mostBorrowed' => $mostBorrowed,
+            'returnedItems' => $returnedItems,
+        ]);
+    }
 }

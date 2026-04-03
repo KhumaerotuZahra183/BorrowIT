@@ -141,7 +141,7 @@
                             <button class="btn" type="submit">Filter</button>
                         </form>
                     </div>
-                    <div class="chart" id="monthlyChart">
+                    <div class="chart" id="monthlyChart" data-link="{{ route('dashboard.monthly') }}">
                         @php $maxValue = max($chart['values'] ?? [1]); @endphp
                         @foreach ($chart['values'] as $index => $value)
                             @php $height = (int) round(($maxValue > 0 ? ($value / $maxValue) : 0) * 150); @endphp
@@ -154,24 +154,6 @@
                                 <span class="bar-label">{{ $chart['labels'][$index] ?? '' }}</span>
                             </div>
                         @endforeach
-                    </div>
-                    <div id="monthlyDetail" style="display:none; margin-top:12px;">
-                        <h4 style="margin:0 0 6px;">Most Borrowed Items</h4>
-                        <ul style="margin:0; padding-left:16px;">
-                            @forelse ($mostBorrowed as $row)
-                                <li>{{ $row['name'] ?? '-' }} ({{ $row['total'] }})</li>
-                            @empty
-                                <li>No data</li>
-                            @endforelse
-                        </ul>
-                        <h4 style="margin:12px 0 6px;">Returned Items</h4>
-                        <ul style="margin:0; padding-left:16px;">
-                            @forelse ($returnedItems as $row)
-                                <li>{{ $row['name'] ?? '-' }} ({{ $row['total'] }})</li>
-                            @empty
-                                <li>No data</li>
-                            @endforelse
-                        </ul>
                     </div>
                 </div>
 
@@ -222,10 +204,10 @@
     </div>
     <script>
         const chart = document.getElementById('monthlyChart');
-        const detail = document.getElementById('monthlyDetail');
-        if (chart && detail) {
+        if (chart && chart.dataset.link) {
+            chart.style.cursor = 'pointer';
             chart.addEventListener('click', () => {
-                detail.style.display = detail.style.display === 'none' ? 'block' : 'none';
+                window.location.href = chart.dataset.link;
             });
         }
     </script>
