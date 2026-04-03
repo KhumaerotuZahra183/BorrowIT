@@ -143,16 +143,16 @@
                     </div>
                     <div class="chart" id="monthlyChart">
                         @php $maxValue = max($chart['values'] ?? [1]); @endphp
-                        @foreach ($chart['values'] as $value)
-                            @php $height = 16 + (int) round(($maxValue > 0 ? ($value / $maxValue) : 0) * 140); @endphp
-                            <div class="bar" style="height: {{ $height }}px;">
-                                <span class="bar-value">{{ $value }}</span>
+                        @foreach ($chart['values'] as $index => $value)
+                            @php $height = (int) round(($maxValue > 0 ? ($value / $maxValue) : 0) * 150); @endphp
+                            <div class="chart-item">
+                                <div class="bar-col">
+                                    <div class="bar-fill" style="height: {{ $height }}px;">
+                                        <span class="bar-value">{{ $value }}</span>
+                                    </div>
+                                </div>
+                                <span class="bar-label">{{ $chart['labels'][$index] ?? '' }}</span>
                             </div>
-                        @endforeach
-                    </div>
-                    <div class="labels">
-                        @foreach ($chart['labels'] as $label)
-                            <span>{{ $label }}</span>
                         @endforeach
                     </div>
                     <div id="monthlyDetail" style="display:none; margin-top:12px;">
